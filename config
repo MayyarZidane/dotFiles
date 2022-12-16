@@ -27,13 +27,13 @@ font pango:DejaVu Sans Mono 10
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
-
+bindsym $mod+Return exec i3-sensible-terminal 
+ 
 # kill focused window
 bindsym $mod+Shift+w kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec "dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -fn 'monospace-14'" 
+bindsym $mod+d exec "dmenu_run -nf '#F8F8F2' -nb '#282A36' -sb '#6272A4' -sf '#F8F8F2' -fn 'monospace-12'" 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -162,7 +162,7 @@ client.background       #F8F8F2
 bar {
   position top
   status_command i3status
-  colors {
+	  colors {
     background #282A36
     statusline #F8F8F2
     separator  #44475A
@@ -190,6 +190,7 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #d
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
 exec_always "setxkbmap -option 'grp:win_space_toggle' -layout us,ar -variant dvorak,qwerty"
 exec picom
-exec --no-startup-id nm-applet
+exec_always --no-startup-id nm-applet
 exec /media/mayyar/1002D664231BFF3/programs/iris-mini-0.3.8.AppImage
 exec_always --no-startup-id feh --no-fehbg --bg-scale ~/Downloads/background.jpg &
+exec xfce4-power-manager
