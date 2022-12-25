@@ -1,22 +1,29 @@
 set number
-set guifont=monospace/h18
+set guifont=MesloLGS_NF/h19
 set noexpandtab
 set tabstop=4
 set shiftwidth=4
 set splitbelow
 set incsearch  " Enable incremental search
+set incsearch  " Enable incremental search
 set splitbelow splitright
 set updatetime=100
+set linebreak
+set timeoutlen=200
+packloadall
 inoremap <S-Tab> <C-d>
 noremap <silent> <C-Up> :resize +3<CR> 
 noremap <silent> <C-Down> :resize -3<CR> 
 noremap <silent> <C-Right> :vertical resize -3<CR> 
 noremap <silent> <C-Left> :vertical resize +3<CR> 
-map <leader>tt :vert term<CR>
-map <leader>th <C-w>t<C-w>K
-map <leader>tv <C-w>t<C-w>H
-map <leader>vv :Vifm<CR>
+"map  <C-y> :!xclip -f -sel clip<CR>
+noremap <leader>tt :vert term<CR>
+noremap <leader>th <C-w>t<C-w>K
+noremap <leader>tv <C-w>t<C-w>H
+noremap <leader>vv :Vifm<CR>
 nmap <F8> :TagbarToggle<CR>
+let g:prettier#autoformat = 1
+let g:prettier#autoformat_require_pragma = 0
 let NERDTreeShowBookmarks = 1   " Show the bookmarks table
 let NERDTreeShowHidden = 1      " Show hidden files
 let NERDTreeShowLineNumbers = 0 " Hide line numbers
@@ -28,6 +35,13 @@ let b:current_syntax = "dracula"
 let g:tagalong_filetypes = ['html']
 let g:user_emmet_leader_key=','
 let g:coc_global_extensions = ['coc-css', 'coc-json', 'coc-git', 'coc-html']
+" .vimrc
+let g:auto_save = 1  " enable AutoSave on Vim startup"
+let g:auto_save_write_all_buffers = 1  " write all open buffers as if you
+" .vimrc
+let g:auto_save_events = ["InsertLeave", "TextChanged"]
+
+command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 call plug#begin()
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dracula/vim'
@@ -46,17 +60,21 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ryanoasis/vim-devicons'
 Plug 'preservim/nerdtree' |
-            \ Plug 'Xuyuanp/nerdtree-git-plugin'
+			\ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'PhilRunninger/nerdtree-buffer-ops'
 Plug 'PhilRunninger/nerdtree-visual-selection'
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'vifm/vifm.vim'
 Plug 'tpope/vim-surround'
 Plug 'Shougo/neocomplcache.vim'
 Plug 'chrisbra/matchit'
+Plug 'NLKNguyen/copy-cut-paste.vim'
+Plug '907th/vim-auto-save'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
 call plug#end()
-:au FocusLost * :wa
-packadd! dracula
+:au FocusLost * :w
+set t_Co=256
+packadd! dracula 
+"colorscheme dracula 
 colorscheme dracula 
 " May need for vim (not neovim) since coc.nvim calculate byte offset by count
 " utf-8 byte sequence.
@@ -80,27 +98,28 @@ set signcolumn=yes
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
 inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
+			\ coc#pum#visible() ? coc#pum#next(1) :
+			\ CheckBackspace() ? "\<Tab>" :
+			\ coc#refresh()
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " Make <CR> to accept selected completion item or notify coc.nvim to format
 " <C-g>u breaks current undo, please make your own choice.
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
+	inoremap <silent><expr> <c-space> coc#refresh()
+	inoremap <silent><expr> <c-@> coc#refresh()
+if exists('+termguicolors')
+	let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
 endif
+
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -280,6 +299,8 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 	  " "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
 	  " "inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
 	  " "inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
+	  " "inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
+	  " "inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
 	  " " Or set this.
 	  " "let g:neocomplcache_enable_cursor_hold_i = 1
 	  " " Or set this.
@@ -329,3 +350,7 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 		" "
 	"}"
 ""
+
+" Use your keymap
+	nmap yy <Plug>CCP_CopyLine
+	vmap y <Plug>CCP_CopyText
