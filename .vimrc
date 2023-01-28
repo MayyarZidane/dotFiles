@@ -10,8 +10,14 @@ set splitbelow splitright
 set updatetime=100
 set linebreak
 set timeoutlen=200
+set autowriteall
+set autoread
+:au FocusLost * :w
+autocmd BufLeave * update
 packloadall
 inoremap <S-Tab> <C-d>
+nmap df F(hdiwlds)
+nmap cf F(hdiwlds)ysiwf
 noremap <silent> <C-Up> :resize +3<CR> 
 noremap <silent> <C-Down> :resize -3<CR> 
 noremap <silent> <C-Right> :vertical resize -3<CR> 
@@ -35,20 +41,15 @@ let b:current_syntax = "dracula"
 let g:tagalong_filetypes = ['html']
 let g:user_emmet_leader_key=','
 let g:coc_global_extensions = ['coc-css', 'coc-json', 'coc-git', 'coc-html']
+let g:indentLine_enabled = 1
 " .vimrc
-let g:auto_save = 1  " enable AutoSave on Vim startup"
-let g:auto_save_write_all_buffers = 1  " write all open buffers as if you
-" .vimrc
-let g:auto_save_events = ["InsertLeave", "TextChanged"]
-
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 call plug#begin()
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dracula/vim'
-Plug 'alvan/vim-closetag'
+"Plug 'alvan/vim-closetag'
 Plug 'ap/vim-css-color'
 Plug 'https://github.com/AndrewRadev/tagalong.vim.git'
-Plug 'preservim/nerdtree'
 Plug 'kien/ctrlp.vim'
 Plug 'tomtom/tcomment_vim'
 Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
@@ -59,17 +60,16 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'jiangmiao/auto-pairs'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ryanoasis/vim-devicons'
-Plug 'preservim/nerdtree' |
-			\ Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'PhilRunninger/nerdtree-buffer-ops'
-Plug 'PhilRunninger/nerdtree-visual-selection'
 Plug 'vifm/vifm.vim'
 Plug 'tpope/vim-surround'
 Plug 'Shougo/neocomplcache.vim'
 Plug 'chrisbra/matchit'
 Plug 'NLKNguyen/copy-cut-paste.vim'
-Plug '907th/vim-auto-save'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
+Plug 'sjl/vitality.vim'
+Plug 'tmux-plugins/vim-tmux-focus-events'
+Plug 'Yggdroot/indentLine'
+Plug 'neoclide/coc-html'
 call plug#end()
 :au FocusLost * :w
 set t_Co=256
@@ -352,5 +352,31 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 ""
 
 " Use your keymap
+" " Use your keyma
+"
 	nmap yy <Plug>CCP_CopyLine
 	vmap y <Plug>CCP_CopyText
+
+"new config
+function! WrapForTmux(s)
+  if !exists('$TMUX')
+    return a:s
+  endif
+
+  let tmux_start = "\<Esc>Ptmux;"
+  let tmux_end = "\<Esc>\\"
+
+  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+endfunction
+
+let &t_SI .= WrapForTmux("\<Esc>[?2004h")
+let &t_EI .= WrapForTmux("\<Esc>[?2004l")
+
+function! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfunction
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+  "

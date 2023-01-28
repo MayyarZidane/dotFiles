@@ -1,6 +1,8 @@
 #import:
 # ~/.config/alacritty/dracula.yml
 # Configuration for Alacritty, the GPU enhanced terminal emulator.
+env:
+  TERM: xterm-256color
 
 items:
   - colors:
@@ -191,11 +193,11 @@ font:
     style: Bold
   # Italic font face
   italic:
-    family: MesloLGS NF 
+    family: MesloLGS NF
     style: Italic
   # Bold italic font face
   bold_italic:
-    family: MesloLGS NF 
+    family: MesloLGS NF
     style: Bold Italic
   # Point size
   size: 16.0
@@ -756,11 +758,9 @@ font:
 # If the same trigger is assigned to multiple actions, all of them are executed
 # in the order they were defined in.
 key_bindings:
-  - {
-      key: Return,
-      mods: Control|Shift,
-      action: SpawnNewInstance
-    }
+  - { key: T, mods: Control|Shift, action: SpawnNewInstance }
+  - { key: Return, mods: Shift, chars: "\e[13;2u" }
+  - { key: Return, mods: Control, chars: "\e[13;5u" }
 
 #- { key: Paste,                                       action: Paste          }
 #- { key: Copy,                                        action: Copy           }
