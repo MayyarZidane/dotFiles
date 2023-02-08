@@ -80,7 +80,15 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(
 	git
 	zsh-autosuggestions
+	sudo
+	web-search
+	copyfile
+	copybuffer
+	dirhistory
+	history
 	)
+
+ZSH_WEB_SEARCH_ENGINES=(youtube "https://www.youtube.com/search/?q=")
 
 source $ZSH/oh-my-zsh.sh
 fpath+=${ZDOTDIR:-~}/.zsh_functions

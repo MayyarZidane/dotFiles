@@ -1,4 +1,4 @@
-set number
+set relativenumber
 set guifont=MesloLGS_NF/h19
 set noexpandtab
 set tabstop=4
